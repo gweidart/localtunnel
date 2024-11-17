@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools >= 75.5.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+write_to = "localtunnel/__init__.py"
+write_to_template = "__version__ = '{version}'"
+
+[project]
+name = "localtunnel"
+dynamic = ["version"]
+description = "Python port of the localtunnel.me Client | Expose localhost to the world!"
+authors = [{ name = "gweidart", email = "btnewcomer@pm.me" }]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.11.2",
+    "asyncio>=3.4.3",
+    "loguru>=0.7.2",
+    "nest_asyncio>=1.5.6"
+]
+
+keywords = [
+    "localtunnel",
+    "tunnel",
+    "proxy",
+    "local server",
+    "port forwarding",
+    "subdomain",
+    "networking",
+    "http proxy",
+    "python client",
+    "cli tool",
+    "remote access",
+    "webhooks",
+    "cloud proxy",
+    "dynamic DNS",
+    "ngrok alternative",
+    "localhost",
+    "secure tunnel",
+    "public URL",
+    "developer tools",
+    "devops",
+    "system administration",
+    "network utilities",
+    "web server",
+    "firewalls",
+    "python library",
+    "python proxy",
+    "port tunneling"
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: Proxy Servers",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Networking :: Firewalls",
+    "Topic :: Utilities",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/gweidart/localtunnel.git"
+Documentation = "https://github.com/gweidart/localtunnel/README.md"
+Repository = "https://github.com/gweidart/localtunnel.git"
+Issues = "https://github.com/gweidart/localtunnel/issues"
+Changelog = "https://github.com/gweidart/localtunnel/blob/master/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "setuptools-scm>=8.1.0",
+    "setuptools>=75.5.0",
+]
+
+[project.scripts]
+lt = "localtunnel.__main__:main"
