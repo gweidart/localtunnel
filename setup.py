@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="localtunnel",
+    name="localtunnel-py",
     version="0.1.0",
     description="A Python client for Localtunnel.",
     long_description=open("README.md").read(),
