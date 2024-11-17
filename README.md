@@ -1,8 +1,8 @@
 # LocalTunnel Python Client
 
-[![PyPI version](https://badge.fury.io/py/localtunnel.svg)](https://pypi.org/project/localtunnel/)
+[![PyPI version](https://badge.fury.io/py/localtunnel-py.svg)](https://pypi.org/project/localtunnel-py/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python Versions](https://img.shields.io/pypi/pyversions/localtunnel.svg)](https://pypi.org/project/localtunnel/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/localtunnel-py.svg)](https://pypi.org/project/localtunnel-py/)
 
 Python port of the Localtunnel Client
 
@@ -27,26 +27,26 @@ Install using a package manager 📦:
 ### via `pip`
 
 ```bash
-pip install localtunnel
+pip install localtunnel-py
 ```
 
 ### via `uv`
 
 ```bash
-uv add localtunnel
+uv add localtunnel-py
 ```
 
 ### via `poetry`
 
 ```bash
-poetry add Localtunnel
+poetry add Localtunnel-py
 ```
 
 For contributors or advanced users, clone the repository and install in editable mode:
 
 ```bash
-git clone https://github.com/gweidart/localtunnel.git
-cd localtunnel
+git clone https://github.com/gweidart/localtunnel-py.git
+cd localtunnel-py
 pip install -e .
 ```
 
@@ -247,6 +247,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Links and Acknowledgments
 
-- [Source Code](https://github.com/gweidart/localtunnel)
-- [Issue Tracker](https://github.com/gweidart/localtunnel/issues)
-- [Documentation](https://github.com/gweidart/localtunnel#readme)
+- [Source Code](https://github.com/gweidart/localtunnel-py)
+- [Issue Tracker](https://github.com/gweidart/localtunnel-py/issues)
+- [Documentation](https://github.com/gweidart/localtunnel-py#readme)
