@@ -8,7 +8,7 @@ write_to = "localtunnel/__init__.py"
 write_to_template = "__version__ = '{version}'"
 
 [project]
-name = "localtunnel"
+name = "localtunnel-py"
 dynamic = ["version"]
 description = "Python port of the localtunnel.me Client | Expose localhost to the world!"
 authors = [{ name = "gweidart", email = "btnewcomer@pm.me" }]
