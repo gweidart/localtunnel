@@ -1,17 +1,19 @@
 import argparse
 import asyncio
+import signal
 import tracemalloc
 
 from localtunnel._logging import logger
 from localtunnel.tunnel_manager import TunnelManager
 
+tracemalloc.start()
 
 def parse_arguments():
     """
     Parse command-line arguments for the LocalTunnel CLI.
     """
     parser = argparse.ArgumentParser(
-        description="LocalTunnel CLI for managing tunnels."
+        description="LocalTunnel CLI for managing tunnels. https://github.com/gweidart/localtunnel-py"
     )
     parser.add_argument(
         "-p",
@@ -35,27 +37,18 @@ def parse_arguments():
         help="LocalTunnel server host URL.",
     )
     parser.add_argument(
-        "-m", "--monitor", action="store_true", help="Enable tunnel monitoring."
-    )
-    parser.add_argument(
-        "-l",
-        "--log-level",
-        type=str,
-        default="INFO",
-        help="Set the log level (e.g., DEBUG, INFO, WARNING).",
+        "-m",
+        "--monitor",
+        action="store_true",
+        help="Enable tunnel monitoring."
     )
     return parser.parse_args()
 
-
-async def async_main():
+async def async_main(stop_event):
     """
     Main entry point for the LocalTunnel CLI.
     """
     args = parse_arguments()
-
-    # Set logging level
-    logger.remove()
-    logger.add(lambda msg: print(msg, end=""), level=args.log_level)
 
     # Initialize TunnelManager
     manager = TunnelManager()
@@ -70,31 +63,50 @@ async def async_main():
 
         # Display tunnel URLs
         for tunnel in manager.tunnels:
-            logger.info("✨ Tunnel open at URL: {}", tunnel.get_tunnel_url())
+            logger.info(f"\u2728 Tunnel open at URL: {tunnel.get_tunnel_url()}")
 
         # Monitor the tunnel(s) if requested
         if args.monitor:
             logger.info("Monitoring tunnels...")
             await manager.monitor_all()
         else:
-            await asyncio.Event().wait()  # Keep the CLI running
+            await asyncio.wait_for(stop_event.wait(), timeout=3600)  # Keep the CLI running, with a timeout of 1 hour
 
+    except asyncio.TimeoutError:
+        logger.warning("Timeout reached, shutting down after 1 hour of inactivity.")
+    except (ConnectionError, asyncio.CancelledError) as e:
+        logger.error(f"A specific error occurred: {e}")
     except Exception as e:
-        logger.error("An error occurred: {}", e)
+        logger.error(f"An unexpected error occurred: {e}")
     finally:
         logger.info("Closing tunnels...")
         await manager.close_all()
-
 
 def main():
     """
     Entry point for the CLI.
     Parses arguments and runs the asynchronous logic.
     """
-    # Run the asynchronous logic with parsed arguments
-    asyncio.run(async_main())
+    stop_event = asyncio.Event()
+    loop = asyncio.get_event_loop()
 
+    # Signal handler to gracefully handle Ctrl+C
+    def handle_signal():
+        logger.info("\nReceived exit signal. Closing Tunnel gracefully...")
+        stop_event.set()
+
+    # Register the signal handler for SIGINT (Ctrl+C) using loop.add_signal_handler
+    loop.add_signal_handler(signal.SIGINT, handle_signal)
+
+    # Run the asynchronous logic with parsed arguments
+    try:
+        loop.run_until_complete(async_main(stop_event))
+    except KeyboardInterrupt:
+        logger.info("\nTunnel interrupted by user.")
+    finally:
+        logger.info("Tunnel closed.")
+        loop.close()
 
 if __name__ == "__main__":
     main()
-    tracemalloc.start()
+

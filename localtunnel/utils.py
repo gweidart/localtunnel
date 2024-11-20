@@ -36,7 +36,7 @@ class RetryTemplate(ABC):
                 self.on_failure(attempt, e)
                 if attempt == retries:
                     self.on_final_failure(e)
-                    raise e
+                    raise
                 await self.delay(attempt)
 
     @abstractmethod
@@ -78,10 +78,10 @@ class FixedRetryTemplate(RetryTemplate):
         logger.info(f"Attempt {attempt} succeeded with result: {result}")
 
     def on_failure(self, attempt: int, exception: Exception):
-        logger.info(f"Attempt {attempt} failed with exception: {exception}")
+        logger.warning(f"Attempt {attempt} failed with exception: {exception}")
 
     def on_final_failure(self, exception: Exception):
-        logger.info(f"All attempts failed. Last exception: {exception}")
+        logger.error(f"All attempts failed. Last exception: {exception}")
 
 
 class ExponentialBackoffRetryTemplate(RetryTemplate):
@@ -102,7 +102,8 @@ class ExponentialBackoffRetryTemplate(RetryTemplate):
         logger.info(f"Attempt {attempt} succeeded with result: {result}")
 
     def on_failure(self, attempt: int, exception: Exception):
-        logger.info(f"Attempt {attempt} failed with exception: {exception}")
+        logger.warning(f"Attempt {attempt} failed with exception: {exception}")
 
     def on_final_failure(self, exception: Exception):
-        logger.info(f"All attempts failed. Last exception: {exception}")
+        logger.error(f"All attempts failed. Last exception: {exception}")
+

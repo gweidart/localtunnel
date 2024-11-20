@@ -67,8 +67,11 @@ class ErrorState(TunnelState):
 
     async def open(self, client):
         logger.warning("Cannot open tunnel in error state. Attempting recovery...")
-        await client._open_tunnel()
-        client.state = client.open_state
+        try:
+            await client._open_tunnel()
+            client.state = client.open_state
+        except Exception as e:
+            logger.error(f"Failed to recover from error state: {e}")
 
     async def close(self, client):
         logger.warning("Closing tunnel from error state...")
@@ -135,14 +138,14 @@ class LocalTunnelClient:
                 if self.subdomain
                 else f"{self.host}/?new"
             )
-            logger.info("Attempting to connect to the LocalTunnel server: {}", endpoint)
+            logger.info(f"Attempting to connect to the LocalTunnel server: {endpoint}")
 
             async with self.session.get(endpoint) as response:
                 if response.status != 200:
                     raise TunnelConnectionError(endpoint, response.status)
 
                 data = await response.json()
-                logger.debug("Server response: {}", data)
+                logger.debug(f"Server response: {data}")
 
                 self.tunnel_url = data.get("url")
                 self.client_id = data.get("id")
@@ -151,7 +154,7 @@ class LocalTunnelClient:
                     raise ValueError("Invalid server response: Missing 'url' or 'id'.")
 
         await self.retry_strategy.retry(attempt_open, retries=3)
-        logger.info("Tunnel successfully opened at {}", self.tunnel_url)
+        logger.info(f"Tunnel successfully opened at {self.tunnel_url}")
 
     async def _close_tunnel(self):
         """
@@ -160,6 +163,7 @@ class LocalTunnelClient:
         if self.session:
             logger.info("Closing the HTTP session...")
             await self.session.close()
+            self.session = None
         self.tunnel_url = None
         self.client_id = None
         logger.info("Tunnel has been closed.")
@@ -170,13 +174,15 @@ class LocalTunnelClient:
         """
         while True:
             try:
+                if not self.session or not self.tunnel_url:
+                    raise TunnelConnectionError("Session or tunnel URL is not available.")
                 async with self.session.get(self.tunnel_url) as response:
                     if response.status != 200:
                         raise TunnelConnectionError(self.tunnel_url, response.status)
-                    logger.debug("Tunnel is active: {}", self.tunnel_url)
+                    logger.debug("Tunnel is active: %s", self.tunnel_url)
                 await asyncio.sleep(10)
             except Exception as e:
-                logger.error("Error during monitoring: {}", e)
+                logger.error(f"Error during monitoring: {e}")
                 self.state = self.error_state
                 break
 
@@ -193,3 +199,4 @@ class LocalTunnelClient:
         if not self.tunnel_url:
             raise TunnelClosedError("Tunnel is not open. Please call `open()` first.")
         return self.tunnel_url
+

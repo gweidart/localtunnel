@@ -40,7 +40,7 @@ class EventNotifier:
         if event_name not in self._subscribers:
             self._subscribers[event_name] = []
         self._subscribers[event_name].append(callback)
-        logger.debug("Subscribed to event: {}", event_name)
+        logger.info(f"Subscribed to event: {event_name}")
 
     def notify(self, event_name: str, *args, **kwargs):
         """
@@ -55,7 +55,7 @@ class EventNotifier:
             for callback in self._subscribers[event_name]:
                 callback(*args, **kwargs)
         else:
-            logger.warning("No subscribers for event: {}", event_name)
+            logger.warning(f"No subscribers for event: {event_name}")
 
 
 # TunnelManager with Singleton, Observer, and Strategy Integration
@@ -86,7 +86,7 @@ class TunnelManager(metaclass=Singleton):
             port, subdomain, host, retry_strategy=self.retry_strategy
         )
         self.tunnels.append(client)
-        logger.info("Tunnel added for port {} with subdomain {}", port, subdomain)
+        logger.info(f"Tunnel added for port {port} with subdomain {subdomain}")
 
     async def open_all(self):
         """
@@ -97,7 +97,7 @@ class TunnelManager(metaclass=Singleton):
                 await tunnel.open()
                 self.notifier.notify("on_open", tunnel)
             except Exception as e:
-                logger.error("Failed to open tunnel: {}", e)
+                logger.error(f"Failed to open tunnel: {e}")
                 self.notifier.notify("on_error", tunnel, e)
 
     async def close_all(self):
@@ -109,7 +109,7 @@ class TunnelManager(metaclass=Singleton):
                 await tunnel.close()
                 self.notifier.notify("on_close", tunnel)
             except Exception as e:
-                logger.error("Failed to close tunnel: {}", e)
+                logger.error(f"Failed to close tunnel: {e}")
 
     async def monitor_all(self):
         """
@@ -120,7 +120,7 @@ class TunnelManager(metaclass=Singleton):
             try:
                 await tunnel.monitor()
             except Exception as e:
-                logger.error("Error during monitoring: {}", e)
+                logger.error(f"Error during monitoring: {e}")
                 self.notifier.notify("on_error", tunnel, e)
 
         tasks = [monitor_tunnel(tunnel) for tunnel in self.tunnels]

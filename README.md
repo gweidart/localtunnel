@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python Versions](https://img.shields.io/pypi/pyversions/localtunnel-py.svg)](https://pypi.org/project/localtunnel-py/)
 
-Python port of the Localtunnel Client
+Python port of the Localtunnel Client with _enhancements_
 
 Expose your localhost to the 🌎 for easy testing and sharing:
 
@@ -86,7 +86,7 @@ pip install -e .
   - Import the library directly into your Python project and manage tunnels programmatically.
 
 - **Extensive Logging**:
-  - Fully customizable logging via [Loguru](https://loguru.readthedocs.io/).
+  - Pretty printed logging with rich tracebacks.
 
 ---
 
@@ -129,13 +129,12 @@ lt --port 3002 -s my-subdomain
 
 Available arguments:
 
-| Argument          | Description                                                                |
-| ----------------- | -------------------------------------------------------------------------- |
-| `-p, --port`      | Local port to expose via the tunnel (required).                            |
-| `-s, --subdomain` | Optional subdomain for the tunnel.                                         |
-| `-t, --host`      | LocalTunnel server URL (default: `https://localtunnel.me`).                |
-| `-m, --monitor`   | Enable monitoring of the tunnel.                                           |
-| `-l, --log-level` | Set the log level (e.g., `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`). |
+| Argument          | Description                                                 |
+| ----------------- | ----------------------------------------------------------- |
+| `-p, --port`      | Local port to expose via the tunnel (required).             |
+| `-s, --subdomain` | Optional subdomain for the tunnel.                          |
+| `-t, --host`      | LocalTunnel server URL (default: `https://localtunnel.me`). |
+| `-m, --monitor`   | Enable monitoring of the tunnel.                            |
 
 ---
 
@@ -220,11 +219,8 @@ await manager.open_all()
 
   - **Solution**: Enable monitoring with `TunnelManager`.
 
-- **Issue**: Logs are too verbose.
-
-  - **Solution**: Customize log levels using `--log-level` in the CLI or `logger.add()` in code.
-
 - **Issue**: Custom subdomain not working.
+
   - **Solution**: Ensure the subdomain is available and correctly passed to `add_tunnel()`.
 
 ---
