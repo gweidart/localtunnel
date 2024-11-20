@@ -1,14 +1,14 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="localtunnel",
+    name="localtunnel-py",
     version='{{VERSION_PLACEHOLDER}}',
     description="A Python client for Localtunnel.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="gweidart",
-    author_email="rollbit@icloud.com",  # Add author email
-    url="https://github.com/gweidart/localtunnel-py",  # Add project URL
+    author_email="rollbit@icloud.com",  
+    url="https://github.com/gweidart/localtunnel-py",  
     license="MIT",
     classifiers=[
         "Development Status :: 4 - Beta",
