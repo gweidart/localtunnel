@@ -42,6 +42,7 @@ jobs:
       run: >-
         python3 -m
         pip install
+        setuptools
         wheel
         build
         --user
