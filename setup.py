@@ -7,8 +7,8 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="gweidart",
-    author_email="gweidart@example.com",  # Add author email
-    url="https://github.com/gweidart/localtunnel",  # Add project URL
+    author_email="rollbit@icloud.com",  # Add author email
+    url="https://github.com/gweidart/localtunnel-py",  # Add project URL
     license="MIT",
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -40,14 +40,14 @@ setup(
     packages=find_packages(),
     install_requires=[
         "aiohttp>=3.11.2",
-        "loguru>=0.7.2",
+        "rich>=13.9.4",
         "asyncio>=3.4.3",
         "nest_asyncio>=1.5.6",
     ],  # Updated dependencies
     entry_points={"console_scripts": ["lt=localtunnel.__main__:main"]},
     python_requires=">=3.12",
     project_urls={
-        "Source": "https://github.com/gweidart/localtunnel",
-        "Bug Tracker": "https://github.com/gweidart/localtunnel/issues",
+        "Source": "https://github.com/gweidart/localtunnel-py",
+        "Bug Tracker": "https://github.com/gweidart/localtunnel-py/issues",
     },
 )
