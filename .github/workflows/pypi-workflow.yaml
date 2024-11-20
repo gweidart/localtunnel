@@ -6,12 +6,23 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+name: Publish to PyPI | create & sign GitHub release
 
 on:
-   workflow_dispatch:
-
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'New tag'
+        required: true
 jobs:
+  createTag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: git tag ${{ github.event.inputs.tag }}
+      
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
@@ -23,22 +34,19 @@ jobs:
       with:
         python-version: "3.x"
 
-    - name: Extract tag name
-      id: tag
-      run: echo ::set-output name=TAG_NAME::$(echo $GITHUB_REF | cut -d / -f 3)
-
     - name: Update version in setup.py
       run: >-
-        sed -i "s/{{VERSION_PLACEHOLDER}}/${{ steps.tag.outputs.TAG_NAME }}/g" setup.py
+        sed -i "s/{{VERSION_PLACEHOLDER}}/${{ github.event.inputs.tag }}/g" setup.py
     
     - name: Install pypa/build
       run: >-
         python3 -m
         pip install
+        wheel
         build
         --user
     - name: Build a binary wheel and a source tarball
-      run: python3 -m build
+      run: python3 setup.py sdist bdist_wheel
     - name: Store the distribution packages
       uses: actions/upload-artifact@v4
       with:
